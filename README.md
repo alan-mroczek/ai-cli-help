@@ -24,7 +24,7 @@ Terminal‑integrated assistant that **suggests shell commands** with help from 
 
 ```bash
 # 1. Clone or unzip
-git clone https://github.com/you/ai-cli-help.git
+git clone https://github.com/alan-mroczek/ai-cli-help.git
 cd ai-cli-help
 
 # 2. Run installer (installs deps with uv, sets up .env & shell hook)
