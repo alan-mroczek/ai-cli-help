@@ -6,9 +6,6 @@
 - Using wifi network
 - Development machine with python, node etc.
 
-## Custom commands
-
-
 ## Blacklist
 
 rm -rf /

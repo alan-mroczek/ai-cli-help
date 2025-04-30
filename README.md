@@ -119,14 +119,15 @@ There’s **no rigid schema**—the model simply reads the text and tries to imi
 
 ```
 ai-cli-help/
-├── main.py         # Entry point
-├── model.py        # LLM abstraction
-├── utils.py        # Helpers (spinner, context, env)
-├── install.py      # One‑shot installer
-├── commands.sh     # Bash wrapper (sources aih)
-├── commands.md     # Docs
-├── .env            # Configuration (git‑ignored)
-├── .env.example    # Configuration example, used as a template to create .env
+├── main.py              # Entry point
+├── model.py             # LLM abstraction
+├── utils.py             # Helpers (spinner, context, env)
+├── install.py           # One‑shot installer
+├── commands.sh          # Bash wrapper (sources aih)
+├── commands.md          # Docs (git-ignored)
+├── commands.example.md  # Docs example
+├── .env                 # Configuration (git‑ignored)
+├── .env.example         # Configuration example, used as a template to create .env
 └── LICENSE
 ```
 
