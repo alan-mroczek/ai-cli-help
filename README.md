@@ -46,10 +46,9 @@ aih --help
 ```
 
 ```
-Command Helper - Your AI Assistant for Shell Commands
 usage: aih [-h] [--context] [--model MODEL] [--max MAX_SUGGESTIONS]
-           [--no-confirm]
-           prompt [prompt ...]
+           [--no-confirm] [--history]
+           [prompt ...]
 
 Suggest shell commands with LLM assistance.
 
@@ -65,6 +64,7 @@ options:
                         Max suggestions (default from MAX_SUGGESTIONS in .env)
   --no-confirm          Skip command confirmation prompt (default from
                         REQUIRE_CONFIRMATION in .env)
+  --history             Display command history and exit
 ```
 
 Example session:
@@ -73,9 +73,7 @@ Example session:
 aih large files here
 ```
 
-```
-Command Helper - Your AI Assistant for Shell Commands
-             
+```   
 Suggestions:
   1. du -ah . | sort -rh | head -n 10
 

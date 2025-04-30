@@ -2,6 +2,7 @@
 """Entry point for Command Helper."""
 import argparse
 import subprocess
+import datetime
 from typing import List, Optional
 from pathlib import Path
 
@@ -13,7 +14,10 @@ from utils import (
 from model import get_suggestions
 
 PROJECT_DIR = Path(__file__).resolve().parent
+COMMAND_LOG_FILE = PROJECT_DIR / "commands.log"
 cfg = load_env()
+MAX_COMMAND_HISTORY = int(cfg.get("MAX_COMMAND_HISTORY", 100))
+
 
 def parse_args() -> argparse.Namespace:
     """Parse and return command line arguments with defaults from environment."""
@@ -21,7 +25,7 @@ def parse_args() -> argparse.Namespace:
         prog="aih",
         description="""Suggest shell commands with LLM assistance."""
     )
-    parser.add_argument("prompt", nargs="+", help="Describe what you want to do")
+    parser.add_argument("prompt", nargs="*", help="Describe what you want to do")
     parser.add_argument(
         "--context",
         action="store_true",
@@ -46,6 +50,11 @@ def parse_args() -> argparse.Namespace:
         default=cfg.get("REQUIRE_CONFIRMATION", "").lower() not in ("true", "yes", "1"),
         help="Skip command confirmation prompt (default from REQUIRE_CONFIRMATION in .env)"
     )
+    parser.add_argument(
+        "--history",
+        action="store_true",
+        help="Display command history and exit"
+    )
     return parser.parse_args()
 
 
@@ -67,7 +76,7 @@ def display_suggestions(suggestions: List[str]) -> None:
     print("  Enter a number to select a command")
     print("  r - Regenerate suggestions")
     print("  c - Add a comment or clarification")
-    print("  0 or empty - Quit")
+    print("  q or 0 or empty - Quit")
 
 
 def choose(suggestions: List[str]) -> ChoiceResult:
@@ -81,6 +90,9 @@ def choose(suggestions: List[str]) -> ChoiceResult:
         
         if not choice:
             return result  # Empty choice, return None cmd
+            
+        if choice == "q":
+            return result  # Quit selected
 
         if choice == "r":
             result.action = "regenerate"
@@ -173,9 +185,65 @@ def get_command_suggestions(prompt: str, context: Optional[str], model_name: str
     return suggestions
 
 
+def log_command(cmd: str) -> None:
+    """Log a command with datetime to the commands.log file."""
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    new_log_entry = f"{timestamp} $ {cmd}\n"
+    
+    try:
+        # Read existing log entries if the file exists
+        existing_entries = []
+        if COMMAND_LOG_FILE.exists():
+            with open(COMMAND_LOG_FILE, "r") as f:
+                existing_entries = f.readlines()
+        
+        # Add the new entry
+        entries = existing_entries + [new_log_entry]
+        
+        # Keep only the most recent entries up to MAX_COMMAND_HISTORY
+        if len(entries) > MAX_COMMAND_HISTORY:
+            entries = entries[-MAX_COMMAND_HISTORY:]
+        
+        # Write back all entries
+        with open(COMMAND_LOG_FILE, "w") as f:
+            f.writelines(entries)
+    except Exception as e:
+        print(f"Warning: Could not log command: {e}")
+
+
+def display_command_history() -> None:
+    """Display the command history from the log file and exit."""
+    try:
+        if not COMMAND_LOG_FILE.exists():
+            print("No command history found.")
+            return
+            
+        with open(COMMAND_LOG_FILE, "r") as f:
+            history = f.read().strip()
+            
+        if not history:
+            print("Command history is empty.")
+        else:
+            print("Command History:")
+            print(history)
+    except Exception as e:
+        print(f"Error reading command history: {e}")
+
+
 def main() -> None:
     """Main program logic."""
     args = parse_args()
+    
+    # Check for history flag and display history if requested
+    if args.history:
+        display_command_history()
+        return
+        
+    # Require at least one prompt word unless showing history
+    if not args.prompt:
+        print("Error: Please provide a prompt describing what you want to do.")
+        return
+        
     user_prompt = " ".join(args.prompt)
     prev_suggestions = []
     user_comment = None
@@ -216,13 +284,14 @@ def main() -> None:
             continue
             
         if choice_result.action == "execute":
+            # Log command before execution
+            log_command(choice_result.cmd)
             execute_command(choice_result.cmd, args.no_confirm)
             return
 
 
 if __name__ == "__main__":
     try:
-        print("Command Helper - Your AI Assistant for Shell Commands")
         main()
     except KeyboardInterrupt:
         print("\nCancelled.")
