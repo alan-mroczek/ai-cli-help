@@ -96,6 +96,7 @@ Your choice:
 | ----------------- | ---------------------------------------------------      | --------------------------- |
 | `OPENAI_API_KEY`  | API key for OpenAI models                                | `sk-…`                      |
 | `MODEL`           | Default model (`openai/gpt-4o-mini`, `ollama/codellama`) | `openai/gpt-4o-mini`        |
+| `OLLAMA_API_URL`  | Ollama chat endpoint                                     | `http://local…::11434/api/…`|
 | `MAX_SUGGESTIONS` | Limit shown suggestions                                  | `3`                         |
 
 ### CLI Flags
