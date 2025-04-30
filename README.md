@@ -4,7 +4,7 @@ AI-powered command helper for your terminal. Built for Bash, customizable and re
 
 Terminal‑integrated assistant that **suggests shell commands** with help from a Large Language Model (LLM).
 
-> “Describe what you want → pick a suggestion → optionally run it.”
+> "Describe what you want → pick a suggestion → optionally run it."
 
 ---
 
@@ -14,9 +14,10 @@ Terminal‑integrated assistant that **suggests shell commands** with help from 
 - **Interactive picker** – always asks before running
 - **Context‑aware** – optionally include cwd, `git status`, and recent history
 - **Customizable** via `commands.md` to let LLM know what you want
+- **Custom context script** – use `.aih_context.sh` to provide additional system context
 - **Single Bash function** (`aih`) for quick access
 - **Configurable** through `.env` or CLI flags
-- **MIT‑licensed** and Python 3.11+ compatible
+- **MIT‑licensed** and Python 3.11+ compatible
 
 ---
 
@@ -112,6 +113,16 @@ Your choice:
 This file is a free-form cheat-sheet for the LLM.  
 There’s **no rigid schema**—the model simply reads the text and tries to imitate or reuse whatever it finds—so write it in whatever style feels natural.  
 
+### `.aih_context.sh`
+
+This optional script allows you to add custom context gathering commands.
+- An empty executable script is created during installation
+- Copy commands from `.aih_context.example.sh` or write your own
+- The script is executed each time you run `aih --context`
+- Output from each command will be included in the LLM prompt
+- Perfect for adding project-specific context or system information
+- Empty scripts are safely ignored and won't affect the context
+
 ---
 
 ## 📂 Project Layout
@@ -125,7 +136,9 @@ ai-cli-help/
 ├── commands.sh          # Bash wrapper (sources aih)
 ├── commands.md          # Docs (git-ignored)
 ├── commands.example.md  # Docs example
-├── .env                 # Configuration (git‑ignored)
+├── .aih_context.sh      # Custom context script (git-ignored)
+├── .aih_context.example.sh # Context script example
+├── .env                 # Configuration (git-ignored)
 ├── .env.example         # Configuration example, used as a template to create .env
 └── LICENSE
 ```

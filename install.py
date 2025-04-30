@@ -47,11 +47,24 @@ def create_env():
     else:
         print("Warning: .env.example missing; skipping .env creation.")
 
+def create_context_script():
+    target = PROJECT_DIR / ".aih_context.sh"
+    
+    if target.exists():
+        return
+        
+    # Create an empty file
+    target.touch()
+    # Make it executable
+    target.chmod(0o755)
+    print("Created empty .aih_context.sh file.")
+    
 def main():
     ensure_uv()
     install_deps()
     link_commands()
     create_env()
+    create_context_script()
     print('Installation complete. Restart your shell or run: source ~/.bashrc')
 
 if __name__ == '__main__':

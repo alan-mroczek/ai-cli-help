@@ -176,3 +176,4 @@ cython_debug/
 # Project-specific files
 commands.md
 .aih_command
+.aih_context.sh
