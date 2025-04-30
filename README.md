@@ -92,7 +92,7 @@ Your choice:
 
 ## 🔧 Configuration
 
-### `.env`
+### `.env` (see .env.example for up to date list)
 
 | Key               | Purpose                                                  | Example                     |
 | ----------------- | ---------------------------------------------------      | --------------------------- |
@@ -110,21 +110,8 @@ Your choice:
 
 ### `commands.md`
 
-Add a `## Blacklist` section listing substrings that **must not** appear in executed commands, e.g.:
-
-```md
-## Blacklist
-
-rm -rf /
-shutdown
-reboot
-```
-
----
-
-## 🚦 Safety
-
-The helper will refuse to run any suggestion containing a blacklisted substring and always asks for confirmation before execution.
+This file is a free-form cheat-sheet for the LLM.  
+There’s **no rigid schema**—the model simply reads the text and tries to imitate or reuse whatever it finds—so write it in whatever style feels natural.  
 
 ---
 
@@ -137,10 +124,9 @@ ai-cli-help/
 ├── utils.py        # Helpers (spinner, context, env)
 ├── install.py      # One‑shot installer
 ├── commands.sh     # Bash wrapper (sources aih)
-├── commands.md     # Docs + blacklist
+├── commands.md     # Docs
 ├── .env            # Configuration (git‑ignored)
 ├── .env.example    # Configuration example, used as a template to create .env
-├── pyproject.toml  # Project metadata
 └── LICENSE
 ```
 
