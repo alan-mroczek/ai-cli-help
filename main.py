@@ -161,10 +161,16 @@ def build_full_context(args, prev_suggestions: List[str] = None, user_comment: s
 
 
 def execute_command(cmd: str, skip_confirm: bool = False) -> None:
-    """Execute the selected command with optional confirmation."""
+    """Write the command to the tmp .aih_command file to let bash run it."""
     if skip_confirm or confirm(cmd):
         print("Running...\n")
-        subprocess.run(cmd, shell=True)
+        try:
+            # Write command to a temporary file
+            with open(".aih_command", "w") as f:
+                f.write(cmd)
+        except Exception as e:
+            print(f"Error writing command to file: {e}")
+            return
     else:
         print("Aborted.")
 
