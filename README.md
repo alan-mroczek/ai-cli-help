@@ -1,2 +1,151 @@
-# ai-cli-help
+# ai-cli-help (aih - AI Help)
+
 AI-powered command helper for your terminal. Built for Bash, customizable and ready to extend.
+
+Terminal‑integrated assistant that **suggests shell commands** with help from a Large Language Model (LLM).
+
+> “Describe what you want → pick a suggestion → optionally run it.”
+
+---
+
+## ✨ Features
+
+- **LLM‑powered suggestions** (OpenAI, Ollama)
+- **Interactive picker** – always asks before running
+- **Context‑aware** – optionally include cwd, `git status`, and recent history
+- **Customizable** via `commands.md` to let LLM know what you want
+- **Single Bash function** (`aih`) for quick access
+- **Configurable** through `.env` or CLI flags
+- **MIT‑licensed** and Python 3.11+ compatible
+
+---
+
+## 🛠️ Installation
+
+```bash
+# 1. Clone or unzip
+git clone https://github.com/you/ai-cli-help.git
+cd ai-cli-help
+
+# 2. Run installer (installs deps with uv, sets up .env & shell hook)
+python install.py
+
+# 3. Reload shell
+source ~/.bashrc
+```
+
+> **Note**: The script uses **[uv](https://github.com/astral-sh/uv)** for fast, isolated deps.  
+> If `uv` isn’t installed, the installer will fetch it.
+
+---
+
+## ⚡ Quick Start
+
+```bash
+aih --help
+```
+
+```
+Command Helper - Your AI Assistant for Shell Commands
+usage: aih [-h] [--context] [--model MODEL] [--max MAX_SUGGESTIONS]
+           [--no-confirm]
+           prompt [prompt ...]
+
+Suggest shell commands with LLM assistance.
+
+positional arguments:
+  prompt                Describe what you want to do
+
+options:
+  -h, --help            show this help message and exit
+  --context             Include directory & git context in the LLM prompt
+                        (default from INCLUDE_CONTEXT in .env)
+  --model MODEL         Override model name (default from MODEL in .env)
+  --max MAX_SUGGESTIONS
+                        Max suggestions (default from MAX_SUGGESTIONS in .env)
+  --no-confirm          Skip command confirmation prompt (default from
+                        REQUIRE_CONFIRMATION in .env)
+```
+
+Example session:
+
+```bash
+aih large files here
+```
+
+```
+Command Helper - Your AI Assistant for Shell Commands
+             
+Suggestions:
+  1. du -ah . | sort -rh | head -n 10
+
+Options:
+  Enter a number to select a command
+  r - Regenerate suggestions
+  c - Add a comment or clarification
+  0 or empty - Quit
+
+Your choice:
+```
+
+---
+
+## 🔧 Configuration
+
+### `.env`
+
+| Key               | Purpose                                                  | Example                     |
+| ----------------- | ---------------------------------------------------      | --------------------------- |
+| `OPENAI_API_KEY`  | API key for OpenAI models                                | `sk-…`                      |
+| `MODEL`           | Default model (`openai/gpt-4o-mini`, `ollama/codellama`) | `openai/gpt-4o-mini`        |
+| `MAX_SUGGESTIONS` | Limit shown suggestions                                  | `3`                         |
+
+### CLI Flags
+
+| Flag        | Description                      |
+| ----------- | -------------------------------- |
+| `--context` | Include cwd, git info, & history |
+| `--model`   | Override model for a single call |
+| `--max`     | Override max suggestions         |
+
+### `commands.md`
+
+Add a `## Blacklist` section listing substrings that **must not** appear in executed commands, e.g.:
+
+```md
+## Blacklist
+
+rm -rf /
+shutdown
+reboot
+```
+
+---
+
+## 🚦 Safety
+
+The helper will refuse to run any suggestion containing a blacklisted substring and always asks for confirmation before execution.
+
+---
+
+## 📂 Project Layout
+
+```
+ai-cli-help/
+├── main.py         # Entry point
+├── model.py        # LLM abstraction
+├── utils.py        # Helpers (spinner, context, env)
+├── install.py      # One‑shot installer
+├── commands.sh     # Bash wrapper (sources aih)
+├── commands.md     # Docs + blacklist
+├── .env            # Configuration (git‑ignored)
+├── .env.example    # Configuration example, used as a template to create .env
+├── pyproject.toml  # Project metadata
+└── LICENSE
+```
+
+---
+
+## 🛡️ License
+
+Licensed under the **MIT License** – see `LICENSE` for details.
