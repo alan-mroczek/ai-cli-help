@@ -7,7 +7,6 @@ AIH_FILE="$AIH_DIR/.aih_command"
 trap 'rm -f "$AIH_FILE"' EXIT
 
 aih() {
-  echo $AIH_FILE
   rm -f "$AIH_FILE"
 
   trap 'rm -f "$AIH_FILE"' RETURN
