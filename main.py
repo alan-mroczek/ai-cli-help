@@ -60,10 +60,16 @@ def parse_args() -> argparse.Namespace:
 
 class ChoiceResult:
     """Result from the choose function with different possible actions."""
-    def __init__(self, cmd=None, action=None, comment=None):
-        self.cmd = cmd  # Selected command
-        self.action = action  # 'execute', 'regenerate', 'comment'
-        self.comment = comment  # User comment if action is 'comment'
+
+    def __init__(
+        self,
+        cmd: Optional[str] = None,
+        action: Optional[str] = None,
+        comment: Optional[str] = None,
+    ) -> None:
+        self.cmd: Optional[str] = cmd  # Selected command
+        self.action: Optional[str] = action  # 'execute', 'regenerate', 'comment'
+        self.comment: Optional[str] = comment  # User comment if action is 'comment'
 
 
 def display_suggestions(suggestions: List[str]) -> None:
@@ -124,7 +130,11 @@ def confirm(cmd: str) -> bool:
     return ans in {"y", "yes"}
 
 
-def build_full_context(args, prev_suggestions: List[str] = None, user_comment: str = None) -> Optional[str]:
+def build_full_context(
+    args: argparse.Namespace,
+    prev_suggestions: Optional[List[str]] = None,
+    user_comment: Optional[str] = None,
+) -> Optional[str]:
     """Build the full context including commands.md, environment context, and user feedback."""
     # Get commands.md content regardless of context flag
     cmd_md_path = PROJECT_DIR / "commands.md"
