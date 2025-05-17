@@ -82,7 +82,7 @@ Options:
   Enter a number to select a command
   r - Regenerate suggestions
   c - Add a comment or clarification
-  0 or empty - Quit
+  q, 0 or empty - Quit
 
 Your choice:
 ```
