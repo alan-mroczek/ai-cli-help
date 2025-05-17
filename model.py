@@ -1,9 +1,8 @@
 import os
 import requests
-from typing import List, Optional, Dict, Any, Tuple
+from typing import List, Optional
 
 import json
-import subprocess
 
 from utils import load_env
 
@@ -31,8 +30,8 @@ User: list the ten largest files here
 Assistant: du -ah . | sort -rh | head -n 10
 """
 
-def _format_system_message(context: Optional[str]) -> Tuple[str, str]:
-    """Format the prompt and context into standardized system and user messages."""
+def _format_system_message(context: Optional[str]) -> str:
+    """Return the system prompt, optionally extended with additional context."""
     system_message = _SYSTEM_PROMPT
     
     # If context is provided, add it to the system message
