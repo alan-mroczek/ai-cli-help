@@ -6,11 +6,11 @@ import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, MutableMapping, Iterator
 
 from dotenv import load_dotenv
 
-def load_env(env_path: Optional[str] = None):
+def load_env(env_path: Optional[str] = None) -> MutableMapping[str, str]:
     """Load .env file and return a mapping of env vars."""
     env_path = env_path or Path(__file__).with_name('.env')
     load_dotenv(env_path)
@@ -58,7 +58,7 @@ def build_context() -> str:
 
 
 @contextmanager
-def spinner(msg: str = "Loading..."):
+def spinner(msg: str = "Loading...") -> Iterator[None]:
     """Simple terminal spinner context manager."""
     stop = False
 
